@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UST-ID | Login</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'ust-purple': '#6A0DAD',
+                    },
+                    fontFamily: {
+                        'poppins': ['Poppins', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #000000;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 350'%3E%3Cpath fill='%23512698' d='M150 10L30 70v220l120 60 120-60V70L150 10zm100 255l-100 50-100-50V95l100-50 100 50v170z'/%3E%3Cpath fill='%23512698' d='M150 70l-80 40v140l80 40 80-40V110l-80-40zm60 160l-60 30-60-30V130l60-30 60 30v100z'/%3E%3Cpath fill='%23512698' d='M150 40l-90 45v180l90 45 90-45V85l-90-45z' fill-opacity='0.2'/%3E%3Cpath fill='%23512698' d='M150 120l-50 25v60l50 25 50-25v-60l-50-25zm30 70l-30 15-30-15v-30l30-15 30 15v30z'/%3E%3Cpath fill='%23512698' d='M135 155h30v10h-10v30h-10v-30h-10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 70%;
+            background-attachment: fixed;
+            background-blend-mode: soft-light;
+            opacity: 0.95;
+        }
+
+        .login-card {
+            background: rgba(26, 26, 26, 0.8);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 20px rgba(106, 13, 173, 0.3);
+        }
+
+        .social-login-btn {
+            transition: transform 0.2s ease;
+        }
+
+        .social-login-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .input-field {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: border-color 0.3s ease;
+        }
+
+        .input-field:focus {
+            border-color: #6A0DAD;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(106, 13, 173, 0.2);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+    <div class="login-card w-full max-w-md rounded-2xl p-8">
+        <!-- Logo and Title -->
+        <div class="text-center mb-8">
+            <h1 class="text-white text-3xl font-bold mb-2">UST-ID</h1>
+            <p class="text-gray-400">University of St. Thomas Digital ID</p>
+        </div>
+
+        <!-- Login Form -->
+        <form action="index.html" class="space-y-6">
+            <!-- Email Input -->
+            <div>
+                <label for="email" class="block text-gray-300 text-sm font-medium mb-2">University Email</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                        <i class="fas fa-envelope"></i>
+                    </span>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        class="input-field w-full pl-10 pr-4 py-3 rounded-lg text-white placeholder-gray-500"
+                        placeholder="username@stthomas.edu"
+                        required
+                    >
+                </div>
+            </div>
+
+            <!-- Password Input -->
+            <div>
+                <label for="password" class="block text-gray-300 text-sm font-medium mb-2">Password</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                        <i class="fas fa-lock"></i>
+                    </span>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        class="input-field w-full pl-10 pr-4 py-3 rounded-lg text-white placeholder-gray-500"
+                        placeholder="Enter your password"
+                        required
+                    >
+                </div>
+            </div>
+
+            <!-- Remember Me & Forgot Password -->
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <input 
+                        type="checkbox" 
+                        id="remember" 
+                        class="h-4 w-4 text-ust-purple rounded border-gray-600 focus:ring-ust-purple bg-gray-700"
+                    >
+                    <label for="remember" class="ml-2 block text-sm text-gray-300">Remember me</label>
+                </div>
+                <a href="#" class="text-sm text-ust-purple hover:text-purple-400">Forgot password?</a>
+            </div>
+
+            <!-- Login Button -->
+            <button 
+                type="submit" 
+                class="w-full bg-ust-purple text-white py-3 rounded-lg font-medium hover:bg-purple-800 transition-colors"
+            >
+                Sign In
+            </button>
+        </form>
+
+        <!-- Divider -->
+        <div class="relative my-8">
+            <div class="absolute inset-0 flex items-center">
+                <div class="w-full border-t border-gray-700"></div>
+            </div>
+            <div class="relative flex justify-center text-sm">
+                <span class="px-2 text-gray-400 bg-[#1a1a1a]">Or continue with</span>
+            </div>
+        </div>
+
+        <!-- Social Login Buttons -->
+        <div class="grid grid-cols-2 gap-4">
+            <!-- Google Login -->
+            <button class="social-login-btn flex items-center justify-center px-4 py-3 border border-gray-700 rounded-lg hover:bg-gray-800 transition-colors">
+                <img src="https://www.google.com/favicon.ico" alt="Google" class="w-5 h-5 mr-2">
+                <span class="text-white">Google</span>
+            </button>
+
+            <!-- Microsoft Login -->
+            <button class="social-login-btn flex items-center justify-center px-4 py-3 border border-gray-700 rounded-lg hover:bg-gray-800 transition-colors">
+                <img src="https://www.microsoft.com/favicon.ico" alt="Microsoft" class="w-5 h-5 mr-2">
+                <span class="text-white">Microsoft</span>
+            </button>
+        </div>
+
+        <!-- Help Text -->
+        <p class="mt-8 text-center text-sm text-gray-400">
+            Need help? Contact 
+            <a href="#" class="text-ust-purple hover:text-purple-400">ITS Support</a>
+        </p>
+    </div>
+
+    <script>
+        // Simple form validation and redirect
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            // Basic validation
+            if (email && password) {
+                // In a real application, this would make an API call to authenticate
+                // For demo purposes, we'll just redirect to the dashboard
+                window.location.href = 'index.html';
+            }
+        });
+
+        // Social login handlers
+        document.querySelectorAll('.social-login-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                // In a real application, this would trigger OAuth flow
+                window.location.href = 'index.html';
+            });
+        });
+    </script>
+</body>
+</html>
