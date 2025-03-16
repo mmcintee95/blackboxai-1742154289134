@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UST-ID | Digital Campus ID</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- QR Code Library -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'ust-purple': '#6A0DAD',
+                    },
+                    fontFamily: {
+                        'poppins': ['Poppins', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #000000;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 350'%3E%3Cpath fill='%23512698' d='M150 10L30 70v220l120 60 120-60V70L150 10zm100 255l-100 50-100-50V95l100-50 100 50v170z'/%3E%3Cpath fill='%23512698' d='M150 70l-80 40v140l80 40 80-40V110l-80-40zm60 160l-60 30-60-30V130l60-30 60 30v100z'/%3E%3Cpath fill='%23512698' d='M150 40l-90 45v180l90 45 90-45V85l-90-45z' fill-opacity='0.2'/%3E%3Cpath fill='%23512698' d='M150 120l-50 25v60l50 25 50-25v-60l-50-25zm30 70l-30 15-30-15v-30l30-15 30 15v30z'/%3E%3Cpath fill='%23512698' d='M135 155h30v10h-10v30h-10v-30h-10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 70%;
+            background-attachment: fixed;
+            background-blend-mode: soft-light;
+            opacity: 0.95;
+        }
+
+        .student-id-card {
+            background: linear-gradient(145deg, #6A0DAD, #8A2BE2);
+            box-shadow: 0 10px 20px rgba(106, 13, 173, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .student-id-card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Toggle Switch Styles */
+        .toggle-switch {
+            width: 60px;
+            height: 34px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: #dc2626;
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Header with Menu Button -->
+    <header class="bg-black p-4 fixed w-full top-0 z-[100]">
+        <div class="container mx-auto flex justify-start items-center relative">
+            <h1 class="text-white text-2xl font-bold">UST-ID</h1>
+            <button id="menuBtn" class="text-white text-2xl p-4 hover:text-ust-purple transition-colors flex items-center justify-center w-16 h-16 rounded-lg hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-ust-purple fixed right-4 top-2 z-[110]">
+                <i class="fas fa-bars text-3xl"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Overlay -->
+    <div id="menuOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-[90] hidden"></div>
+
+    <!-- Side Menu -->
+    <div id="sideMenu" class="fixed right-0 top-0 h-full w-80 bg-gray-900 transform translate-x-full transition-transform duration-300 ease-in-out z-[100] shadow-2xl">
+        <div class="p-6 h-full overflow-y-auto">
+            <div class="flex justify-between items-center mb-8">
+                <h3 class="text-white text-xl font-semibold">Menu</h3>
+                <button id="closeMenu" class="text-white text-xl hover:text-ust-purple">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <nav class="text-white">
+                <ul class="space-y-6">
+                    <li>
+                        <button onclick="showEmergencyContacts()" class="w-full text-left flex items-center p-3 rounded-lg hover:bg-gray-800 transition-colors">
+                            <i class="fas fa-phone-alt text-ust-purple mr-3 w-6"></i>
+                            <span>Emergency Contacts</span>
+                        </button>
+                    </li>
+                    <li>
+                        <button onclick="showClassSchedule()" class="w-full text-left flex items-center p-3 rounded-lg hover:bg-gray-800 transition-colors">
+                            <i class="fas fa-calendar text-ust-purple mr-3 w-6"></i>
+                            <span>Class Schedule</span>
+                        </button>
+                    </li>
+                    <li>
+                        <div class="relative">
+                            <button onclick="showLibraryMenu()" class="w-full text-left flex items-center p-3 rounded-lg hover:bg-gray-800 transition-colors">
+                                <i class="fas fa-book text-ust-purple mr-3 w-6"></i>
+                                <span>Library Resources</span>
+                                <i class="fas fa-chevron-right ml-auto"></i>
+                            </button>
+                            <div id="libraryMenu" class="hidden absolute left-full top-0 ml-2 bg-gray-900 p-4 rounded-lg shadow-lg w-56">
+                                <a href="https://library.stthomas.edu/" target="_blank" class="block p-3 rounded-lg hover:bg-gray-800 transition-colors mb-2">
+                                    <i class="fas fa-external-link-alt mr-2"></i>
+                                    Library Website
+                                </a>
+                                <a href="https://ssomgr.ampr.stthomas.edu/ssomanager/ui/samlLogout.jsp" target="_blank" class="block p-3 rounded-lg hover:bg-gray-800 transition-colors">
+                                    <i class="fas fa-external-link-alt mr-2"></i>
+                                    Murphy Online
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <button onclick="showCheckIns()" class="w-full text-left flex items-center p-3 rounded-lg hover:bg-gray-800 transition-colors">
+                            <i class="fas fa-door-open text-ust-purple mr-3 w-6"></i>
+                            <span>Check-ins</span>
+                        </button>
+                    </li>
+                    <li>
+                        <a href="https://campusmap.stthomas.edu/" target="_blank" class="w-full text-left flex items-center p-3 rounded-lg hover:bg-gray-800 transition-colors">
+                            <i class="fas fa-map-marker-alt text-ust-purple mr-3 w-6"></i>
+                            <span>Campus Map</span>
+                            <i class="fas fa-external-link-alt ml-auto"></i>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 pt-20 pb-16">
+        <!-- Digital Student ID Card -->
+        <div class="student-id-card max-w-md mx-auto rounded-xl overflow-hidden shadow-2xl mb-8 p-6 text-white">
+            <div class="text-center mb-4">
+                <div class="relative w-32 h-32 mx-auto mb-4">
+                    <img id="profileImage" src="https://placehold.co/128/6A0DAD/FFFFFF/png?text=Profile" alt="Student Profile" class="w-32 h-32 rounded-full border-4 border-white object-cover">
+                    <label for="profileUpload" class="absolute bottom-0 right-0 bg-ust-purple text-white rounded-full w-8 h-8 flex items-center justify-center cursor-pointer hover:bg-purple-800">
+                        <i class="fas fa-camera"></i>
+                    </label>
+                    <input type="file" id="profileUpload" accept="image/*" class="hidden" onchange="handleProfileUpload(event)">
+                </div>
+                <h2 class="text-2xl font-bold">John Doe</h2>
+                <p class="text-lg">Student ID: 100012345</p>
+            </div>
+        </div>
+
+        <!-- Lost Card Mode Toggle -->
+        <div class="max-w-md mx-auto bg-gray-900 rounded-lg p-6 mb-8">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-white text-lg font-semibold">Lost Card Mode</h3>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="lostCardToggle">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            <p id="lostCardStatus" class="text-gray-400 text-sm hidden">Your physical ID is now deactivated. Contact campus security to reactivate.</p>
+        </div>
+
+        <!-- Tap-to-Access Section -->
+        <div class="max-w-md mx-auto bg-gray-900 rounded-lg p-6 mb-8">
+            <h3 class="text-white text-lg font-semibold mb-4">Quick Access</h3>
+            <div class="flex justify-around">
+                <button id="nfcBtn" class="bg-ust-purple text-white px-6 py-3 rounded-lg flex items-center">
+                    <i class="fas fa-wifi mr-2"></i>
+                    NFC Tap
+                </button>
+                <button id="qrBtn" class="bg-ust-purple text-white px-6 py-3 rounded-lg flex items-center">
+                    <i class="fas fa-qrcode mr-2"></i>
+                    Show QR
+                </button>
+            </div>
+            <div id="qrCode" class="hidden mt-4 text-center">
+                <!-- QR Code will be generated here -->
+            </div>
+        </div>
+
+        <!-- Account Balance Section -->
+        <div class="max-w-md mx-auto bg-gray-900 rounded-lg p-6 mb-8">
+            <h3 class="text-white text-lg font-semibold mb-4">Account Balance</h3>
+            <div class="grid grid-cols-3 gap-4 mb-6">
+                <div class="bg-gray-800 p-4 rounded-lg">
+                    <p class="text-gray-400">Meal Swipes</p>
+                    <p class="text-white text-xl font-bold">63</p>
+                </div>
+                <div class="bg-gray-800 p-4 rounded-lg">
+                    <p class="text-gray-400">Dining Dollars</p>
+                    <p class="text-white text-xl font-bold">$250.50</p>
+                </div>
+                <div class="bg-gray-800 p-4 rounded-lg">
+                    <p class="text-gray-400">ExPress Dollars</p>
+                    <p class="text-white text-xl font-bold">$175.25</p>
+                </div>
+            </div>
+            <button class="w-full bg-ust-purple text-white py-3 rounded-lg">
+                Add Funds
+            </button>
+            
+            <!-- Recent Transactions -->
+            <div class="mt-6">
+                <h4 class="text-white text-md font-semibold mb-3">Recent Transactions</h4>
+                <div class="space-y-3">
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-400">Anderson Student Center</span>
+                        <span class="text-white">-$12.50</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-400">Library Printing</span>
+                        <span class="text-white">-$2.00</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-400">Dining Hall</span>
+                        <span class="text-white">-$15.75</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Campus Alerts Banner -->
+    <div class="fixed bottom-0 w-full bg-red-600 text-white py-3">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center">
+                <i class="fas fa-exclamation-circle mr-2"></i>
+                <div id="alertScroller" class="overflow-hidden">
+                    <div id="alertText" class="whitespace-nowrap">
+                        Dining Hall closes early today at 6:00 PM • Severe weather warning – classes delayed • Lost and found: ID card found near library
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Check-ins -->
+    <div id="checkInsModal" class="modal hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center px-4">
+        <div class="modal-content bg-gray-900 p-6 rounded-lg w-full max-w-2xl max-h-[80vh] overflow-y-auto">
+            <h2 class="text-2xl text-white font-bold mb-6">Recent Check-ins</h2>
+            <div class="space-y-4">
+                <div class="check-in-item bg-gray-800 p-4 rounded-lg flex items-center space-x-4">
+                    <div class="text-ust-purple text-2xl">
+                        <i class="fas fa-door-open"></i>
+                    </div>
+                    <div class="flex-grow">
+                        <p class="text-ust-purple font-semibold">Ireland Hall - East Entry</p>
+                        <p class="text-gray-400 text-sm">3:05 PM - March 11, 2025</p>
+                    </div>
+                    <div class="text-green-500">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                </div>
+                <div class="check-in-item bg-gray-800 p-4 rounded-lg flex items-center space-x-4 hover:bg-gray-700 transition-colors">
+                    <div class="text-ust-purple text-2xl">
+                        <i class="fas fa-restroom"></i>
+                    </div>
+                    <div class="flex-grow">
+                        <p class="text-ust-purple font-semibold">Ireland Hall - 3rd Floor East Bathroom</p>
+                        <p class="text-gray-400 text-sm">3:07 PM - March 11, 2025</p>
+                    </div>
+                    <div class="text-green-500">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                </div>
+                <div class="check-in-item bg-gray-800 p-4 rounded-lg flex items-center space-x-4 hover:bg-gray-700 transition-colors">
+                    <div class="text-ust-purple text-2xl">
+                        <i class="fas fa-bed"></i>
+                    </div>
+                    <div class="flex-grow">
+                        <p class="text-ust-purple font-semibold">Ireland Hall - Room 303</p>
+                        <p class="text-gray-400 text-sm">3:15 PM - March 11, 2025</p>
+                    </div>
+                    <div class="text-green-500">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                </div>
+                <div class="check-in-item bg-gray-800 p-4 rounded-lg flex items-center space-x-4 hover:bg-gray-700 transition-colors">
+                    <div class="text-ust-purple text-2xl">
+                        <i class="fas fa-running"></i>
+                    </div>
+                    <div class="flex-grow">
+                        <p class="text-ust-purple font-semibold">Anderson Recreation Center - Main Entrance</p>
+                        <p class="text-gray-400 text-sm">5:30 PM - March 11, 2025</p>
+                    </div>
+                    <div class="text-green-500">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                </div>
+                <div class="check-in-item bg-gray-800 p-4 rounded-lg flex items-center space-x-4 hover:bg-gray-700 transition-colors">
+                    <div class="text-ust-purple text-2xl">
+                        <i class="fas fa-door-open"></i>
+                    </div>
+                    <div class="flex-grow">
+                        <p class="text-ust-purple font-semibold">Schoenecker Hall North - Main Entry</p>
+                        <p class="text-gray-400 text-sm">8:45 AM - March 11, 2025</p>
+                    </div>
+                    <div class="text-green-500">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                </div>
+                <div class="check-in-item bg-gray-800 p-4 rounded-lg">
+                    <p class="text-ust-purple font-semibold">Dowling Hall - East Entry</p>
+                    <p class="text-gray-400">10:15 AM - March 11, 2025</p>
+                </div>
+                <div class="check-in-item bg-gray-800 p-4 rounded-lg">
+                    <p class="text-ust-purple font-semibold">Ireland Hall - Room 303</p>
+                    <p class="text-gray-400">11:30 PM - March 10, 2025</p>
+                </div>
+                <div class="check-in-item bg-gray-800 p-4 rounded-lg">
+                    <p class="text-ust-purple font-semibold">Ireland Hall - 3rd Floor East Bathroom</p>
+                    <p class="text-gray-400">11:25 PM - March 10, 2025</p>
+                </div>
+                <div class="check-in-item bg-gray-800 p-4 rounded-lg">
+                    <p class="text-ust-purple font-semibold">Anderson Recreation Center - Fitness Center</p>
+                    <p class="text-gray-400">4:15 PM - March 10, 2025</p>
+                </div>
+                <div class="check-in-item bg-gray-800 p-4 rounded-lg">
+                    <p class="text-ust-purple font-semibold">Schoenecker Hall North - Study Room</p>
+                    <p class="text-gray-400">2:30 PM - March 10, 2025</p>
+                </div>
+                <div class="check-in-item bg-gray-800 p-4 rounded-lg">
+                    <p class="text-ust-purple font-semibold">Ireland Hall - East Entry</p>
+                    <p class="text-gray-400">1:15 PM - March 10, 2025</p>
+                </div>
+                <div class="check-in-item bg-gray-800 p-4 rounded-lg">
+                    <p class="text-ust-purple font-semibold">Dowling Hall - Computer Lab</p>
+                    <p class="text-gray-400">11:20 AM - March 10, 2025</p>
+                </div>
+                <div class="check-in-item bg-gray-800 p-4 rounded-lg">
+                    <p class="text-ust-purple font-semibold">Ireland Hall - Room 303</p>
+                    <p class="text-gray-400">9:45 AM - March 10, 2025</p>
+                </div>
+                <div class="check-in-item bg-gray-800 p-4 rounded-lg">
+                    <p class="text-ust-purple font-semibold">Ireland Hall - 3rd Floor East Bathroom</p>
+                    <p class="text-gray-400">9:40 AM - March 10, 2025</p>
+                </div>
+                <div class="check-in-item bg-gray-800 p-4 rounded-lg">
+                    <p class="text-ust-purple font-semibold">Anderson Recreation Center - Pool</p>
+                    <p class="text-gray-400">7:30 AM - March 10, 2025</p>
+                </div>
+                <div class="check-in-item bg-gray-800 p-4 rounded-lg">
+                    <p class="text-ust-purple font-semibold">Ireland Hall - Room 303</p>
+                    <p class="text-gray-400">11:55 PM - March 9, 2025</p>
+                </div>
+                <div class="check-in-item bg-gray-800 p-4 rounded-lg">
+                    <p class="text-ust-purple font-semibold">Ireland Hall - 3rd Floor East Bathroom</p>
+                    <p class="text-gray-400">11:50 PM - March 9, 2025</p>
+                </div>
+                <div class="check-in-item bg-gray-800 p-4 rounded-lg">
+                    <p class="text-ust-purple font-semibold">Schoenecker Hall North - Main Entry</p>
+                    <p class="text-gray-400">8:15 PM - March 9, 2025</p>
+                </div>
+                <div class="check-in-item bg-gray-800 p-4 rounded-lg">
+                    <p class="text-ust-purple font-semibold">Anderson Recreation Center - Gym</p>
+                    <p class="text-gray-400">6:20 PM - March 9, 2025</p>
+                </div>
+                <div class="check-in-item bg-gray-800 p-4 rounded-lg">
+                    <p class="text-ust-purple font-semibold">Ireland Hall - East Entry</p>
+                    <p class="text-gray-400">4:30 PM - March 9, 2025</p>
+                </div>
+                <div class="check-in-item bg-gray-800 p-4 rounded-lg">
+                    <p class="text-ust-purple font-semibold">Dowling Hall - Study Lounge</p>
+                    <p class="text-gray-400">2:45 PM - March 9, 2025</p>
+                </div>
+                <div class="check-in-item bg-gray-800 p-4 rounded-lg">
+                    <p class="text-ust-purple font-semibold">Ireland Hall - Room 303</p>
+                    <p class="text-gray-400">12:30 PM - March 9, 2025</p>
+                </div>
+                <div class="check-in-item bg-gray-800 p-4 rounded-lg">
+                    <p class="text-ust-purple font-semibold">Ireland Hall - 3rd Floor East Bathroom</p>
+                    <p class="text-gray-400">12:25 PM - March 9, 2025</p>
+                </div>
+                <div class="check-in-item bg-gray-800 p-4 rounded-lg">
+                    <p class="text-ust-purple font-semibold">Anderson Recreation Center - Main Entry</p>
+                    <p class="text-gray-400">10:15 AM - March 9, 2025</p>
+                </div>
+                <div class="check-in-item bg-gray-800 p-4 rounded-lg">
+                    <p class="text-ust-purple font-semibold">Schoenecker Hall North - Study Room</p>
+                    <p class="text-gray-400">8:30 AM - March 9, 2025</p>
+                </div>
+                <div class="check-in-item bg-gray-800 p-4 rounded-lg">
+                    <p class="text-ust-purple font-semibold">Ireland Hall - Room 303</p>
+                    <p class="text-gray-400">7:45 AM - March 9, 2025</p>
+                </div>
+                <div class="check-in-item bg-gray-800 p-4 rounded-lg">
+                    <p class="text-ust-purple font-semibold">Ireland Hall - 3rd Floor East Bathroom</p>
+                    <p class="text-gray-400">7:40 AM - March 9, 2025</p>
+                </div>
+                <div class="check-in-item bg-gray-800 p-4 rounded-lg">
+                    <p class="text-ust-purple font-semibold">Dowling Hall - East Entry</p>
+                    <p class="text-gray-400">11:30 PM - March 8, 2025</p>
+                </div>
+                <div class="check-in-item bg-gray-800 p-4 rounded-lg">
+                    <p class="text-ust-purple font-semibold">Ireland Hall - Room 303</p>
+                    <p class="text-gray-400">9:15 PM - March 8, 2025</p>
+                </div>
+            </div>
+            <button onclick="toggleModal('checkInsModal', false)" class="mt-6 w-full bg-ust-purple text-white py-2 rounded-lg hover:bg-purple-800 transition-colors">Close</button>
+        </div>
+    </div>
+
+    <!-- Modal for Emergency Contacts -->
+    <div id="emergencyModal" class="modal hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+        <div class="bg-gray-900 p-6 rounded-lg max-w-md w-full mx-4">
+            <h3 class="text-white text-xl font-bold mb-4">Emergency Contacts</h3>
+            <div class="space-y-4">
+                <div>
+                    <p class="text-ust-purple font-semibold">Public Safety</p>
+                    <p class="text-white">Emergency: <a href="tel:651-962-5555" class="text-ust-purple">651-962-5555</a></p>
+                    <p class="text-white">Non-Emergency: <a href="tel:651-962-5100" class="text-ust-purple">651-962-5100</a></p>
+                </div>
+                <div>
+                    <p class="text-ust-purple font-semibold">Center for Well-Being</p>
+                    <p class="text-white"><a href="tel:651-962-6750" class="text-ust-purple">651-962-6750</a></p>
+                </div>
+                <div>
+                    <p class="text-ust-purple font-semibold">Ireland Hall 3rd Floor RA</p>
+                    <p class="text-white"><a href="tel:320-555-0123" class="text-ust-purple">320-555-0123</a></p>
+                </div>
+            </div>
+            <button onclick="toggleModal('emergencyModal', false)" class="mt-6 w-full bg-ust-purple text-white py-2 rounded-lg hover:bg-purple-800 transition-colors">Close</button>
+        </div>
+    </div>
+
+    <!-- Modal for Class Schedule -->
+    <div id="scheduleModal" class="modal hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+        <div class="bg-gray-900 p-6 rounded-lg max-w-2xl w-full mx-4">
+            <h3 class="text-white text-xl font-bold mb-4">Spring 2024 Class Schedule</h3>
+            <div class="space-y-4">
+                <div class="bg-gray-800 p-4 rounded-lg">
+                    <p class="text-ust-purple font-semibold">CISC 230 - Object-Oriented Design & Programming</p>
+                    <p class="text-white">Monday/Wednesday/Friday • 9:35 AM - 10:40 AM</p>
+                    <p class="text-gray-400">OSS 415</p>
+                </div>
+                <div class="bg-gray-800 p-4 rounded-lg">
+                    <p class="text-ust-purple font-semibold">MATH 114 - Calculus II</p>
+                    <p class="text-white">Tuesday/Thursday • 8:00 AM - 9:40 AM</p>
+                    <p class="text-gray-400">JRC 126</p>
+                </div>
+                <div class="bg-gray-800 p-4 rounded-lg">
+                    <p class="text-ust-purple font-semibold">ENGL 121 - Critical Thinking & Writing</p>
+                    <p class="text-white">Monday/Wednesday/Friday • 11:45 AM - 12:50 PM</p>
+                    <p class="text-gray-400">MCH 108</p>
+                </div>
+                <div class="bg-gray-800 p-4 rounded-lg">
+                    <p class="text-ust-purple font-semibold">THEO 101 - Christian Theological Tradition</p>
+                    <p class="text-white">Tuesday/Thursday • 1:30 PM - 3:10 PM</p>
+                    <p class="text-gray-400">BEC 103</p>
+                </div>
+            </div>
+            <button onclick="toggleModal('scheduleModal', false)" class="mt-6 w-full bg-ust-purple text-white py-2 rounded-lg hover:bg-purple-800 transition-colors">Close</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const menuBtn = document.getElementById('menuBtn');
+            const closeMenuBtn = document.getElementById('closeMenu');
+            const sideMenu = document.getElementById('sideMenu');
+            const menuOverlay = document.getElementById('menuOverlay');
+            const libraryMenu = document.getElementById('libraryMenu');
+            const lostCardToggle = document.getElementById('lostCardToggle');
+            const lostCardStatus = document.getElementById('lostCardStatus');
+            const qrBtn = document.getElementById('qrBtn');
+            const qrCodeDiv = document.getElementById('qrCode');
+            const nfcBtn = document.getElementById('nfcBtn');
+            const alertText = document.getElementById('alertText');
+
+            // Menu Functions
+            function toggleMenu(show = true) {
+                if (show) {
+                    sideMenu.classList.remove('translate-x-full');
+                    menuOverlay.classList.remove('hidden');
+                    document.body.style.overflow = 'hidden';
+                    menuBtn.setAttribute('aria-expanded', 'true');
+                } else {
+                    sideMenu.classList.add('translate-x-full');
+                    menuOverlay.classList.add('hidden');
+                    document.body.style.overflow = '';
+                    menuBtn.setAttribute('aria-expanded', 'false');
+                    libraryMenu.classList.add('hidden');
+                }
+            }
+
+            // Make functions globally available
+            window.toggleModal = function(modalId, show = true) {
+                const modal = document.getElementById(modalId);
+                if (show) {
+                    modal.classList.remove('hidden');
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    modal.classList.add('hidden');
+                    document.body.style.overflow = '';
+                }
+            };
+
+            // Feature Functions
+            function showEmergencyContacts() {
+                toggleMenu(false);
+                toggleModal('emergencyModal', true);
+            }
+
+            function showClassSchedule() {
+                toggleMenu(false);
+                toggleModal('scheduleModal', true);
+            }
+
+            function showLibraryMenu() {
+                libraryMenu.classList.toggle('hidden');
+            }
+
+            // Profile Picture Upload
+            function handleProfileUpload(event) {
+                const file = event.target.files[0];
+                if (file && file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        document.getElementById('profileImage').src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+
+            // Alert Scroller
+            let position = 0;
+            function scrollAlert() {
+                position--;
+                if (position < -alertText.offsetWidth) {
+                    position = alertText.parentElement.offsetWidth;
+                }
+                alertText.style.transform = `translateX(${position}px)`;
+                requestAnimationFrame(scrollAlert);
+            }
+
+            // Event Listeners
+            menuBtn.addEventListener('click', () => toggleMenu(true));
+            closeMenuBtn.addEventListener('click', () => toggleMenu(false));
+            menuOverlay.addEventListener('click', () => toggleMenu(false));
+
+            lostCardToggle.addEventListener('change', () => {
+                lostCardStatus.classList.toggle('hidden');
+            });
+
+            qrBtn.addEventListener('click', () => {
+                qrCodeDiv.classList.toggle('hidden');
+                if (!qrCodeDiv.classList.contains('hidden')) {
+                    const qr = qrcode(0, 'M');
+                    qr.addData('UST-ID:100012345');
+                    qr.make();
+                    qrCodeDiv.innerHTML = qr.createImgTag(5);
+                }
+            });
+
+            nfcBtn.addEventListener('click', () => {
+                alert('Simulating NFC tap... Access granted!');
+            });
+
+            // Close modals when clicking outside
+            window.addEventListener('click', (event) => {
+                const modals = document.querySelectorAll('.modal');
+                modals.forEach(modal => {
+                    if (event.target === modal) {
+                        toggleModal(modal.id, false);
+                    }
+                });
+            });
+
+            // Close modals with escape key
+            window.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape') {
+                    toggleMenu(false);
+                    document.querySelectorAll('.modal').forEach(modal => {
+                        toggleModal(modal.id, false);
+                    });
+                }
+            });
+
+            // Initialize
+            menuBtn.setAttribute('aria-expanded', 'false');
+            menuBtn.setAttribute('aria-label', 'Open menu');
+            scrollAlert();
+
+            function showCheckIns() {
+                toggleMenu(false);
+                toggleModal('checkInsModal', true);
+            }
+
+            // Make functions globally available
+            window.showEmergencyContacts = showEmergencyContacts;
+            window.showClassSchedule = showClassSchedule;
+            window.showLibraryMenu = showLibraryMenu;
+            window.handleProfileUpload = handleProfileUpload;
+            window.toggleModal = toggleModal;
+            window.showCheckIns = showCheckIns;
+        });
+    </script>
+</body>
+</html>
